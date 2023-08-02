@@ -18,7 +18,7 @@ public class ProductController {
 
     @GetMapping
     public ResponseEntity getAllProducts(){
-        var allProducts = productRepository.findAll();
+        var allProducts = productRepository.findAllByActiveTrue();
         return ResponseEntity.ok(allProducts);
     }
 
@@ -37,6 +37,16 @@ public class ProductController {
         product.setName(requestProductDTO.name());
         product.setPrice_in_cents(requestProductDTO.price_in_cents());
 //        return new ResponseEntity<>(product, HttpStatus.OK);
+        return getAllProducts();
+    }
+
+    @DeleteMapping("/{id}")
+    @Transactional
+    public ResponseEntity deleteProduct(@PathVariable Long id){
+        Product product = productRepository.getReferenceById(id);
+        product.setActive(false);
+//        productRepository.deleteById(id);
+//        return ResponseEntity.noContent().build();
         return getAllProducts();
     }
 }
